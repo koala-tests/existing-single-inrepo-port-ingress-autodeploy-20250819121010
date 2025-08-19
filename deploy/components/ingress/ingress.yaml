@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: existing-single-inrepo-port-ingress-autodeploy-20250819121010
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: HOSTNAME_PLACEHOLDER
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: existing-single-inrepo-port-ingress-autodeploy-20250819121010
+            port:
+              number: 80

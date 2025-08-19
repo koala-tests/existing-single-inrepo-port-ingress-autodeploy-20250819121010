@@ -1,0 +1,26 @@
+env:
+  - CGO_ENABLED=0
+
+before:
+  hooks:
+    - go mod tidy
+    - go mod download
+builds:
+  - id: server
+    main: ./main.go
+    binary: server
+    targets:
+      - linux_amd64_v1
+      - darwin_arm64
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+archives:
+  - format: binary
+dockers:
+  - image_templates:
+      - ghcr.io/existing-single-inrepo-port-ingress-autodeploy-20250819121010:latest
+    ids:
+      - server  
+    extra_files:
+      - VERSION
+

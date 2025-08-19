@@ -1,0 +1,11 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: existing-single-inrepo-port-ingress-autodeploy-20250819121010
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  tls:
+  - hosts:
+    - HOSTNAME_PLACEHOLDER
+    secretName: TLS_SECRET_NAME_PLACEHOLDER

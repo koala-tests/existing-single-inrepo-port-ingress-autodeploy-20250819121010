@@ -1,0 +1,76 @@
+###################################################################################################
+# Create a new Release.
+#
+# This workflow will update tag/version, build and push a Docker container to the container registry.
+# If configured to auto-deploy, it will also deploy the new version to the cluster.
+###################################################################################################
+name: Release
+
+# Prevent concurrent runs on the same branch/tag ref.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Optional tag to use for this release"
+        required: false
+        type: string
+
+jobs:
+  image_tag:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.image_tag.outputs.tag }}
+      commit_hash: ${{ steps.image_tag.outputs.commit_hash }}
+    permissions:
+      contents: "write"
+      id-token: "write"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Determine image tag
+        id: image_tag
+        uses: KoalaOps/determine-image-tag@v1
+        with:
+          tag_format: branch-date-counter
+          include_counter: true
+
+
+  build:
+    uses: ./.github/workflows/build_image.yml
+    needs: image_tag
+    permissions:
+      contents: "write"
+      id-token: "write"
+      packages: "write"
+    with:
+      service_name: existing-single-inrepo-port-ingress-autodeploy-20250819121010
+      ref: ${{ needs.image_tag.outputs.commit_hash }}
+      tag: ${{ needs.image_tag.outputs.tag }}
+      service_dir: "."
+    secrets: inherit
+
+  # Deploy the new version to the cluster
+
+  deploy:
+    needs: [image_tag, build]
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    permissions:
+      contents: "write"
+      id-token: "write"
+    with:
+      ref: ${{ github.ref }}
+      tag: ${{ needs.image_tag.outputs.tag }}
+      service_name: existing-single-inrepo-port-ingress-autodeploy-20250819121010
+      overlay: dev
+      cloud_provider_location_cluster: gcp/us-east1-b/nonprod-cluster-us-east1
+      deployment_repo: 
+      deployment_folder_path: 
+

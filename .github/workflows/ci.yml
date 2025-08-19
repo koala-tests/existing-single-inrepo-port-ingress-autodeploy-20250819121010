@@ -1,0 +1,32 @@
+# This workflow is the primary CI workflow for the project.
+# It is triggered on every push to the main branch and on every pull request to the  main branch.
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: Build & Test
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4      
+      - uses: ./.github/actions/build-action
+        name: Build
+        # Use the following to pass an access token to the build action in order to access private repositories
+        # with:
+        #   token: ${{ secrets.GH_ACCESS_TOKEN }}
+
+      - name: Test
+        run: go test -v ./...

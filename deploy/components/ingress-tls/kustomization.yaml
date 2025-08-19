@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+configMapGenerator:
+- behavior: merge
+  name: existing-single-inrepo-port-ingress-autodeploy-20250819121010-environment-values
+  literals:
+  - INGRESS_TLS_SECRET_NAME=existing-single-inrepo-port-ingress-autodeploy-20250819121010-tls-cert
+patches:
+ - path: ./add-cert-annotations-patch.yaml
+replacements:
+ - path: ./tls-host-replacement.yaml
+ - path: ./tls-secret-name-replacement.yaml

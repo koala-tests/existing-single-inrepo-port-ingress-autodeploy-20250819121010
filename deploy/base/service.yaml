@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: existing-single-inrepo-port-ingress-autodeploy-20250819121010
+spec:
+  type: ClusterIP
+  ports:
+    - port: 9999
+      targetPort: 9999
+      protocol: TCP
+      name: http
+  selector:
+    app: existing-single-inrepo-port-ingress-autodeploy-20250819121010

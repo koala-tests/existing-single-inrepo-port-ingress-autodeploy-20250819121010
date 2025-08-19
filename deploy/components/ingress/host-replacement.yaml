@@ -1,0 +1,10 @@
+source:
+  kind: ConfigMap
+  name: existing-single-inrepo-port-ingress-autodeploy-20250819121010-environment-values
+  fieldPath: data.HOSTNAME_PLACEHOLDER
+targets:
+- select:
+    kind: Ingress
+    name: existing-single-inrepo-port-ingress-autodeploy-20250819121010
+  fieldPaths:
+    - spec.rules.[host=HOSTNAME_PLACEHOLDER].host

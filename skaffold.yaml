@@ -1,0 +1,26 @@
+apiVersion: skaffold/v4beta1
+kind: Config
+metadata:
+  name: existing-single-inrepo-port-ingress-autodeploy-20250819121010
+build:
+  tagPolicy:
+    sha256: {}
+  platforms: ["linux/amd64", "darwin/arm64"]
+  artifacts:
+  - image: ghcr.io/existing-single-inrepo-port-ingress-autodeploy-20250819121010
+    custom:
+      buildCommand: ./build.sh
+      dependencies:
+        paths:
+          - "go.mod"
+          - "**/*.go"
+manifests:
+  kustomize:
+    paths:
+    - deploy/overlays/dev
+profiles:
+- name: prod
+  manifests:
+    kustomize:
+      paths:
+      - deploy/overlays/prod

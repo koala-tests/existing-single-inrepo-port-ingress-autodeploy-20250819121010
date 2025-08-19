@@ -1,0 +1,65 @@
+ServiceName = "existing-single-inrepo-port-ingress-autodeploy-20250819121010"
+Name = ""
+Description = "E2E integration test"
+Owners = ["eyal.dulb@gmail.com"]
+ServerFramework = "go-server"
+ServerMain = ""
+ArtifactRepository = "ghcr.io"
+Port = 9999
+ContainerEnvFileName = "container.env"
+EnvironmentConfigFileName = "environment-values.env"
+LegacyIngressPatchEnabled = false
+EnvNamePrefixEnabled = false
+LegacyObjectSuffixEnabled = false
+
+[KoalaVersionInfo]
+  Version = ""
+  DeployWorkflowVersion = ""
+
+[Repo]
+  Name = "existing-single-inrepo-port-ingress-autodeploy-20250819121010"
+  GitUser = "koala-tests"
+  URL = "https://github.com/koala-tests/existing-single-inrepo-port-ingress-autodeploy-20250819121010"
+  Path = ""
+  IsMonorepo = false
+  Token = ""
+
+[TemplateConfig]
+  Repo = ""
+  Path = ""
+
+[OpenAPIConfig]
+  SpecPath = ""
+  QueryPath = ""
+  CodegenTool = ""
+
+[[Environments]]
+  Name = "dev"
+  Namespace = "dev"
+  Cluster = "nonprod-cluster-us-east1"
+  Location = "us-east1-b"
+  CloudProvider = "gcp"
+  IngressEnabled = false
+  IngressHost = ""
+  [Environments.EnvDeploymentConfig]
+    AutoDeploy = true
+
+[SSLConfig]
+  CertName = ""
+  Issuer = ""
+  IssuerContactEmail = ""
+
+[Metrics]
+  Collector = ""
+  [Metrics.Endpoint]
+    Path = ""
+    Port = 0
+    Scheme = ""
+    Interval = ""
+
+[Tracing]
+  Backend = ""
+  URL = ""
+
+[Profiling]
+  Tool = ""
