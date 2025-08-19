@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+labels:
+- pairs:
+    app: existing-single-inrepo-port-ingress-autodeploy-20250819121010
+configMapGenerator:
+- name: existing-single-inrepo-port-ingress-autodeploy-20250819121010-environment-values
+  envs:
+  - environment-values.env
+- name: existing-single-inrepo-port-ingress-autodeploy-20250819121010-container-vars
+  envs:
+  - container.env
+generatorOptions:
+  disableNameSuffixHash: true # use a static name
+kind: Kustomization
+resources:
+- deployment.yaml
+- service.yaml

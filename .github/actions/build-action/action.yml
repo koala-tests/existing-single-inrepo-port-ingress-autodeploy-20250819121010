@@ -1,0 +1,39 @@
+name: Build Go binary
+description: Build Go binary and optionally build docker image (depending on args to goreleaser)
+inputs:
+  goreleaser_args:
+    description: "Arguments to pass to GoReleaser"
+    required: false
+    default: "build --clean --single-target --snapshot"
+  token:
+    description: "A GitHub token for access to private repositories"
+    required: false
+  service_dir:
+    description: "The directory of the service"
+    required: false
+    default: "."
+  working_directory:
+    description: 'Working directory where the code is located'
+    required: false
+    default: '.'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: "1.22"
+    - name: Give GitHub Actions access to private repositories
+      if: ${{ inputs.token != '' }}
+      uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ inputs.token }}
+    - run: git config --global url."ssh://git@github.com/".insteadOf "https://github.com/"
+      if: ${{ inputs.token != '' }}
+      shell: bash
+    - name: GoReleaser release Action (build Docker image)
+      uses: goreleaser/goreleaser-action@v5
+      with:
+        workdir: ${{ inputs.working_directory }}/${{ inputs.service_dir }}
+        args: ${{ inputs.goreleaser_args }}
